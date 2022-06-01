@@ -22,6 +22,12 @@ function App() {
   }, []);
   const handleSearch = (event) => {
     let value = event.target.value.toLowerCase();
+    let result = [];
+    console.log(value);
+    result = allData.filter((data) => {
+      return data.searchType.search(value) !== -1;
+    });
+    setFilteredData(result);
   };
   const styles = {
     display: "inline",
