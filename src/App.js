@@ -4,30 +4,36 @@ import axios from "axios";
 // import Search from "./Search";
 
 function App() {
-  const [allData, setAllData] = useState([]);
-  const [filteredData, setFilteredData] = useState(allData);
-  let result = [];
-  result = allData.filter((data) => {});
+  // const [allData, setAllData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  // let result = [];
+  // result = allData.filter((data) => {});
 
   useEffect(() => {
-    axios("https://imdb-api.com/en/API/SearchMovie/k_g77w9fwz/")
+    axios
+      .get("https://imdb-api.com/en/API/SearchMovie/k_g77w9fwz/inception 2010")
       .then((response) => {
-        console.log(response.data);
-        setAllData(response.data);
-        setFilteredData(response.data);
+        console.log(response.data.results);
+        setFilteredData(response.data.results);
       })
       .catch((error) => {
         console.log("Error getting fake data: " + error);
       });
   }, []);
   const handleSearch = (event) => {
-    let value = event.target.value.toLowerCase();
-    let result = [];
-    console.log(value);
-    result = allData.filter((data) => {
-      return data.searchType.search(value) !== -1;
-    });
-    setFilteredData(result);
+    let value = event.target.value;
+    // console.log("value", value);
+    // console.log("============", filteredData);
+    if (value) {
+      const result =
+        filteredData?.length &&
+        filteredData.filter((data) => data.title === value);
+      // console.log("0000", result);
+
+      setFilteredData(result?.length ? result : filteredData);
+    } else {
+      setFilteredData(filteredData);
+    }
   };
   const styles = {
     display: "inline",
@@ -47,13 +53,14 @@ function App() {
         <input type="text" onChange={(event) => handleSearch(event)} />
       </div>
       <div style={{ padding: 10 }}>
-        {filteredData.map((value, index) => {
-          return (
-            <div style={styles} key={value.id}>
-              {value.title}
-            </div>
-          );
-        })}
+        {filteredData &&
+          filteredData.map((value, index) => {
+            return (
+              <div style={styles} key={index}>
+                {value.title}
+              </div>
+            );
+          })}
       </div>
     </div>
   );
